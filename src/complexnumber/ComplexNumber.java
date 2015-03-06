@@ -25,7 +25,6 @@ public class ComplexNumber
      */
     public void setPolar(double argument, double modulus)
     {
-    	System.out.println(modulus);
         if(modulus >= 0)
         {
         	this.re = Math.cos(argument*Math.PI/180)*modulus;
@@ -78,9 +77,22 @@ public class ComplexNumber
     }
     
     /*
-     * Non sono presenti costruttori poichÈ questa classe gestisce i numeri complessi in due modi, utilizzando
-     * coordinate cartesiane e polari. Non Ë possibile realizzare entrambi i metodi costruttori, poichÈ entrambi
-     * richiedono due valori double. » stato quindi deciso di non utilizzare nessun metodo costruttore, perciÚ l'utente,
-     * per inizializzare i campi della classe, utilizzer‡ il metodo setRectangular e setPolar.
-     */
+	    1) Math.sqrt(Math.pow(this.re, 2)+Math.pow(this.im, 2))
+	       Math.atan(this.im/this.re)*180)/Math.PI
+	       Per re = 0 e im = 0 l'argomento deve essere NaN
+	       this.re = Math.cos(argument*Math.PI/180)*modulus
+	       this.im = Math.sin(argument*Math.PI/180)*modulus
+	       
+	    2) Non posso fornire quattro funzioni setter (setRe, setIm, setModulus, setArgument), ma lavorare 
+	       con due (setRectangular, setPolar), poich√© i parametri devo essere utilizzati in coppia.
+	    
+		3) Non sono quindi presenti costruttori poich√© questa classe gestisce i numeri complessi in due modi, utilizzando
+	       coordinate cartesiane e polari. Non √® possibile fornire entrambi i metodi costruttori, poich√© entrambi
+	       richiedono come parametri due valori double. √à stato quindi deciso di non utilizzare nessun metodo costruttore, 
+	       perci√≤ l'utente, per inizializzare i campi della classe, utilizzer√† i metodi setRectangular e setPolar.
+		
+		4) Devo necessariamente utilizzare quattro funzioni getter (getRe, getIm, getModulus, getArgument),
+		   poich√©, utilizzandone solamente due (getRectangular, getPolar), ciascun metodo dovrebbe ritornare due valori,
+		   cosa impossibile.
+    */
 }
