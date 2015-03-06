@@ -9,6 +9,8 @@ public class Ese102
     public static void main(String[] args) throws IOException
     {
     	ComplexNumber coordinates = new ComplexNumber();
+    	boolean correctValue = false;
+    	double readNumber = 0;
     	short choice = 0;
         while(choice != 1 && choice != 2)
         {
@@ -22,9 +24,21 @@ public class Ese102
         }
         else if(choice == 2)
         {
-        	coordinates.setRectangular(readInput("Enter the argument: ", "You entered an illegal number"), readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number"));
+        	readNumber = readInput("Enter the argument: ", "You entered an illegal number");
+        	while(!correctValue)
+        	{
+        		try
+	        	{
+	        		coordinates.setPolar(readNumber, readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number"));
+	        		correctValue = true;
+	        	}
+	        	catch (IllegalArgumentException e)
+	            {
+	                System.out.println("The value of modulus must be equal or bigger than 0.");
+	            }
+        	}      	
         	System.out.println("\n" + "Real: " + coordinates.getRe());
-        	System.out.println("Immaginary: " + coordinates.getIm());
+	        System.out.println("Immaginary: " + coordinates.getIm());
         }
     }
     
