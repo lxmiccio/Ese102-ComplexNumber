@@ -53,7 +53,7 @@ public class ComplexNumber
     public double getArgument()
     {
     	int bugFix = 0;
-    	if(this.re < 0 && this.im == 0)
+    	if(this.re < 0)
     		bugFix = 180;
     	return((Math.atan(this.im/this.re)*180)/Math.PI+bugFix);
     }
