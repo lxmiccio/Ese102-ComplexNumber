@@ -8,86 +8,176 @@ public class Ese102
 {
     public static void main(String[] args) throws IOException
     {
-    	menu();
+    	ComplexNumber.setInitializeRectangular(0, 0);
+    	ComplexNumber.setInitializePolar(0, 0);
     	ComplexNumber coordinates1 = new ComplexNumber(), coordinates2 = new ComplexNumber();
     	boolean correctValue = false, exit = false;
-    	double readNumber = 0;
-    	byte choice = 0;
+    	byte choiceFormat = 0, choiceOperation = 0;
     	while(!exit)
     	{
-    		choice = 0;
-    		try
-    		{
-	        	choice = (byte)readInput("Choice: ", "You entered an illegal number");
-	        	if(choice < 1 || choice > 9 || choice == 8)
-	        		throw new IllegalArgumentException("The value of choice is incorrect.");
-    		}
-    		catch (IllegalArgumentException exception)
-            {
-                System.out.println(exception.getMessage());
-                java.awt.Toolkit.getDefaultToolkit().beep();
-            }
-	        if(choice == 1)
-	        {
-	        	coordinates1.setRectangular(readInput("Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	System.out.println("\n" + "Modulus: " + coordinates1.getModulus());
-	            System.out.println("Argument: " + coordinates1.getArgument());       
-	        }
-	        else if(choice == 2)
-	        {
-	        	readNumber = readInput("Enter the argument: ", "You entered an illegal number");
-	        	while(!correctValue)
-	        	{
-	        		try
-		        	{
-		        		coordinates1.setPolar(readNumber, readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number"));
-		        		correctValue = true;
-		        	}
-	        		catch (IllegalArgumentException exception)
-	                {
-	                    System.out.println(exception.getMessage());
-	                    java.awt.Toolkit.getDefaultToolkit().beep();
-	                }
-	        	}
-	        	correctValue = false;
-	        	System.out.println("\n" + coordinates1.formatComplexNumber());
-	        }
-	        else if(choice == 3)
-	        {
-	        	coordinates1.setRectangular(readInput("First complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	coordinates2.setRectangular(readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	System.out.println(coordinates1.add(coordinates2).formatComplexNumber());
-	        }
-	        else if(choice == 4)
-	        {
-	        	coordinates1.setRectangular(readInput("First complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	coordinates2.setRectangular(readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	System.out.println(coordinates1.sub(coordinates2).formatComplexNumber());
-	        }
-	        else if(choice == 5)
-	        {
-	        	coordinates1.setRectangular(readInput("First complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	coordinates2.setRectangular(readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	System.out.println(coordinates1.multiply(coordinates2).formatComplexNumber());
-	        }
-	        else if(choice == 6)
-	        {
-	        	coordinates1.setRectangular(readInput("First complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	coordinates2.setRectangular(readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	System.out.println(coordinates1.divide(coordinates2).formatComplexNumber());
-	        }
-	        else if(choice == 7)
-	        {
-	        	coordinates1.setRectangular(readInput("Enter RE: ", "You entered an illegal number"), readInput("Enter IM: ", "You entered an illegal number"));
-	        	System.out.println(coordinates1.getConjugate().formatComplexNumber());
-	        }
-	        else if(choice == 9)
-	        {
-	        	System.out.println("Thanks for using this software." + "\n" + "See you soon.");
-	        	exit = true;
-	        }
-	        else
-	        	System.out.println("You made a wrong choice");
+    		Ese102.formatMenu();
+    		choiceFormat = 0;
+        	correctValue = false;
+        	while(!correctValue)
+        	{
+        		try
+        		{
+    	        	choiceFormat = (byte)Ese102.readInput("Choice: ", "You entered an illegal number.");
+    	        	if(choiceFormat < 1 || choiceFormat > 2 && choiceFormat != 9)
+    	        		throw new IllegalArgumentException("You made a wrong choice.");
+    	        	correctValue = true;
+        		}
+        		catch (IllegalArgumentException exception)
+                {
+                    System.out.println(exception.getMessage());
+                    java.awt.Toolkit.getDefaultToolkit().beep();
+                }
+        	}
+        	System.out.println();
+        	correctValue = false;
+        	switch(choiceFormat)
+        	{
+        		case 1:
+        			coordinates1.setRectangular(Ese102.readInput("Enter Re: ", "You entered an illegal number."), Ese102.readInput("Enter Im: ", "You entered an illegal number."));
+    	            System.out.println("Argument: " + coordinates1.getArgument());
+    	            System.out.println("Modulus: " + coordinates1.getModulus());
+    	            break;
+        		case 2:
+    	        	while(!correctValue)
+    	        	{
+    	        		try
+    		        	{
+    		        		coordinates1.setPolar(Ese102.readInput("Enter the argument: ", "You entered an illegal number."), Ese102.readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number."));
+    		        		correctValue = true;
+    		        	}
+    	        		catch (IllegalArgumentException exception)
+    	                {
+    	                    System.out.println(exception.getMessage());
+    	                    java.awt.Toolkit.getDefaultToolkit().beep();
+    	                }
+    	        	}
+    	        	System.out.println(coordinates1.formatComplexNumber());
+    	        	break;
+        		case 9:
+        			System.out.println("Thanks for using this software." + "\n" + "See you soon.");
+        			exit = true;
+        			break;
+        	}
+        	System.out.println();
+        	Ese102.operationsMenu();
+        	choiceOperation = 0;
+        	correctValue = false;
+        	while(!correctValue)
+        	{
+        		try
+        		{
+    	        	choiceOperation = (byte)Ese102.readInput("Choice: ", "You entered an illegal number.");
+    	        	if(choiceOperation < 1 || choiceOperation > 5 && choiceOperation != 9)
+    	        		throw new IllegalArgumentException("You made a wrong choice.");
+    	        	correctValue = true;
+        		}
+        		catch (IllegalArgumentException exception)
+                {
+                    System.out.println(exception.getMessage());
+                    java.awt.Toolkit.getDefaultToolkit().beep();
+                }
+        	}
+        	System.out.println();
+        	correctValue = false;
+        	switch(choiceOperation)
+        	{
+        		case 1:
+        			if(choiceFormat == 1)
+        				coordinates2.setRectangular(Ese102.readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number."), Ese102.readInput("Enter IM: ", "You entered an illegal number."));
+        			else
+        			{
+        				while(!correctValue)
+        	        	{
+        	        		try
+        		        	{
+        		        		coordinates2.setPolar(Ese102.readInput("Enter the argument: ", "You entered an illegal number."), Ese102.readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number."));
+        		        		correctValue = true;
+        		        	}
+        	        		catch (IllegalArgumentException exception)
+        	                {
+        	                    System.out.println(exception.getMessage());
+        	                    java.awt.Toolkit.getDefaultToolkit().beep();
+        	                }
+        	        	}
+        			}
+        			System.out.println("Sum: " + ComplexNumber.add(coordinates1, coordinates2).formatComplexNumber());
+    	            break;
+        		case 2:
+        			if(choiceFormat == 1)
+        				coordinates2.setRectangular(Ese102.readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number."), Ese102.readInput("Enter IM: ", "You entered an illegal number."));
+        			else
+        			{
+        				while(!correctValue)
+        	        	{
+        	        		try
+        		        	{
+        		        		coordinates2.setPolar(Ese102.readInput("Enter the argument: ", "You entered an illegal number."), Ese102.readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number."));
+        		        		correctValue = true;
+        		        	}
+        	        		catch (IllegalArgumentException exception)
+        	                {
+        	                    System.out.println(exception.getMessage());
+        	                    java.awt.Toolkit.getDefaultToolkit().beep();
+        	                }
+        	        	}
+        			}
+        			System.out.println("Subtraction: " + ComplexNumber.sub(coordinates1, coordinates2).formatComplexNumber());
+    	        	break;
+        		case 3:
+        			if(choiceFormat == 1)
+        				coordinates2.setRectangular(Ese102.readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number."), Ese102.readInput("Enter IM: ", "You entered an illegal number."));
+        			else
+        			{
+        				while(!correctValue)
+        	        	{
+        	        		try
+        		        	{
+        		        		coordinates2.setPolar(Ese102.readInput("Enter the argument: ", "You entered an illegal number."), Ese102.readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number."));
+        		        		correctValue = true;
+        		        	}
+        	        		catch (IllegalArgumentException exception)
+        	                {
+        	                    System.out.println(exception.getMessage());
+        	                    java.awt.Toolkit.getDefaultToolkit().beep();
+        	                }
+        	        	}
+        			}
+        			System.out.println("Multiplication: " + ComplexNumber.multiply(coordinates1, coordinates2).formatComplexNumber());
+    	        	break;
+        		case 4:
+        			if(choiceFormat == 1)
+        				coordinates2.setRectangular(Ese102.readInput("Second complex number: " + "\n" + "Enter RE: ", "You entered an illegal number."), Ese102.readInput("Enter IM: ", "You entered an illegal number."));
+        			else
+        			{
+        				while(!correctValue)
+        	        	{
+        	        		try
+        		        	{
+        		        		coordinates2.setPolar(Ese102.readInput("Enter the argument: ", "You entered an illegal number."), Ese102.readInput("Enter the modulus (Equal or bigger than 0): ", "You entered an illegal number."));
+        		        		correctValue = true;
+        		        	}
+        	        		catch (IllegalArgumentException exception)
+        	                {
+        	                    System.out.println(exception.getMessage());
+        	                    java.awt.Toolkit.getDefaultToolkit().beep();
+        	                }
+        	        	}
+        			}
+        			System.out.println("Division: " + ComplexNumber.divide(coordinates1, coordinates2).formatComplexNumber());
+    	        	break;
+        		case 5:
+        			System.out.println("Conjugate: " + ComplexNumber.getConjugate(coordinates1).formatComplexNumber());
+        			break;
+        		case 9:
+        			System.out.println("Thanks for using this software." + "\n" + "See you soon.");
+        			exit = true;
+        			break;
+        	}
 	        System.out.println();
     	}
     }
@@ -117,16 +207,22 @@ public class Ese102
         return readNumber;
     }
     
-    private static void menu()
+    private static void formatMenu()
     {
     	System.out.println("Make your choice");
     	System.out.println("[1] From rectangular to polar");
     	System.out.println("[2] From polar to rectangular");
-    	System.out.println("[3] Adds two complex numbers");
-    	System.out.println("[4] Subs two complex numbers");
-    	System.out.println("[5] Multiplies two complex numbers");
-    	System.out.println("[6] Divides two complex numbers");
-    	System.out.println("[7] Conjugate of the complex numbers");
+    	System.out.println("[9] Exit");
+    }
+    
+    private static void operationsMenu()
+    {
+    	System.out.println("Make your choice");
+    	System.out.println("[1] Adds two complex numbers");
+    	System.out.println("[2] Subs two complex numbers");
+    	System.out.println("[3] Multiplies two complex numbers");
+    	System.out.println("[4] Divides two complex numbers");
+    	System.out.println("[5] Conjugate of the complex numbers");
     	System.out.println("[9] Exit");
     }
 }

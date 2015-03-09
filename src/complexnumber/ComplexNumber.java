@@ -2,11 +2,40 @@ package complexnumber;
 
 public class ComplexNumber
 {
+	private static double initializeRe;
+    private static double initializeIm;
     private double re;
     private double im;
-        
+    
+    /**
+     * Static method, initialize the variables initializeRe and initializeIm to default value.
+     * Works only with rectangular coordinates.
+     * @param re
+     * @param im
+     */
+    public static void setInitializeRectangular(double re, double im)
+    {
+        initializeRe = re;
+        initializeIm = im;
+    }
+    
+    /**
+     * Static method, initialize the variables initializeRe and initializeIm to default value, given argument and modulus.
+	 * Works only with polar coordinates.
+     * @param modulus
+     * @param argument
+     */
+    public static void setInitializePolar(double modulus, double argument)
+    {
+        if(modulus < 0)
+        	throw new IllegalArgumentException("Modulus must be greater or equal to 0");
+        initializeRe = Math.cos(argument*Math.PI/180)*modulus;
+        initializeIm = Math.sin(argument*Math.PI/180)*modulus;
+    }
+    
     /**
      * SetRectangular initializes the variables re and im.
+     * Works only with rectangular coordinates.
      * @param re
      * @param im
      */
@@ -17,123 +46,88 @@ public class ComplexNumber
     }
     
     /**
-     * SetPolar initializes the variables argument and modulus. 
+     * SetPolar initializes the variables re and im, given argument and modulus.
+     * Works only with polar coordinates.
      * The modulus can't be less than 0.
      * @param modulus
      * @param argument
      */
     public void setPolar(double argument, double modulus)
     {
-        if(modulus >= 0)
-        {
-        	this.re = Math.cos(argument*Math.PI/180)*modulus;
-	        this.im = Math.sin(argument*Math.PI/180)*modulus;
-        	if(argument == 90)
-        		this.re = 0;
-        	else if(argument == 180)
-	        	this.im = 0;
-        	else if(argument == 270)
-        		this.re = 0;
-        }
-        else
-        	throw new IllegalArgumentException("The value of modulus must be equal or bigger than 0.");
+        if(modulus < 0)
+        	throw new IllegalArgumentException("The value of modulus must be equal or bigger than 0.");        	
+        this.re = Math.cos(argument*Math.PI/180)*modulus;
+	    this.im = Math.sin(argument*Math.PI/180)*modulus;
+        if(argument%90 == 0 && argument%180 != 0)
+        	this.re = Math.floor(this.re);
+        else if(argument%180 == 0)
+        	this.im = Math.floor(this.im);
     }
     
     /**
      * Given two complex numbers, sums them. 
-     * Works only with rectangular coordinates.
+     * Works either with rectangular and with polar coordinates.
      * @param operand
      * @return
      */
-    public ComplexNumber add(ComplexNumber operand)
+    public static ComplexNumber add(ComplexNumber operand1, ComplexNumber operand2)
     {
     	ComplexNumber result = new ComplexNumber();
-        result.setRectangular(this.re+operand.re, this.im+operand.im);
+        result.setRectangular(operand1.re+operand2.re, operand1.im+operand2.im);
     	return result;
     }
     
     /**
      * Given two complex numbers, subtracts them.
-     * Works only with rectangular coordinates.
+     * Works either with rectangular and with polar coordinates.
      * @param operand
      * @return
      */
-    public ComplexNumber sub(ComplexNumber operand)
+    public static ComplexNumber sub(ComplexNumber operand1, ComplexNumber operand2)
     {
     	ComplexNumber result = new ComplexNumber();
-    	result.setRectangular(this.re-operand.re, this.im-operand.im);
+    	result.setRectangular(operand1.re-operand2.re, operand1.im-operand2.im);
     	return result;
     }
     
     /**
-     * Given two complex numbers, multiply them.
-     * Works only with rectangular coordinates.
+     * Given two complex numbers, multiplies them.
+     * Works either with rectangular and with polar coordinates.
      * @param operand
      * @return
      */
-    public ComplexNumber multiply(ComplexNumber operand)
+    public static ComplexNumber multiply(ComplexNumber operand1, ComplexNumber operand2)
     {
     	ComplexNumber result = new ComplexNumber();
-    	result.setPolar(this.getArgument()+operand.getArgument(), this.getModulus()*operand.getModulus());
+    	result.setPolar(operand1.getArgument()+operand2.getArgument(), operand1.getModulus()*operand2.getModulus());
     	return result;
     }
     
     /**
      * Given two complex numbers, divides them.
+     * Works either with rectangular and with polar coordinates.
      * @param operand
      * @return
      */
-    public ComplexNumber divide(ComplexNumber operand)
+    public static ComplexNumber divide(ComplexNumber operand1, ComplexNumber operand2)
     {
     	ComplexNumber result = new ComplexNumber();
-    	result.setPolar(this.getArgument()-operand.getArgument(), this.getModulus()/operand.getModulus());
+    	result.setPolar(operand1.getArgument()-operand2.getArgument(), operand1.getModulus()/operand2.getModulus());
     	return result;
     }
         
     /**
      * Given a complex number, returns the complex conjugate.
-     * Works only with rectangular coordinates.
+     * Works either with rectangular and with polar coordinates.
      * @return
      */
-    public ComplexNumber getConjugate()
+    public static ComplexNumber getConjugate(ComplexNumber operand)
     {
     	ComplexNumber result = new ComplexNumber();
-    	result.setRectangular(this.re, -this.im);
+    	result.setRectangular(operand.re, -operand.im);
     	return result;
     }
-    
-    /**
-     * Prints the complex number.
-     * Works only with rectangular coordinates.
-     * @return
-     */
-    public String formatComplexNumber()
-    {
-        String result = this.getRe() + "+(" + this.getIm() + ")i";
-        return result;
-    }
-    
-    /**
-     * Returns the modulus.
-     * @return
-     */
-    public double getModulus()
-    {
-        return(Math.sqrt(Math.pow(this.re, 2)+Math.pow(this.im, 2)));
-    }
-        
-    /**
-     * Returns the argument. If re < 0 and im == 0 it returns 180.
-     * @return
-     */
-    public double getArgument()
-    {
-    	int bugFix = 0;
-    	if(this.re < 0)
-    		bugFix = 180;
-    	return((Math.atan(this.im/this.re)*180)/Math.PI+bugFix);
-    }
-    
+      
     /**
      * Returns re.
      * @return
@@ -150,6 +144,38 @@ public class ComplexNumber
     public double getIm()
     {
         return im;
+    }
+    
+    /**
+     * Returns the argument.
+     * @return
+     */
+    public double getArgument()
+    {
+    	short bugFix = 0;
+    	if(this.re < 0)
+    		bugFix = 180;
+    	return((Math.atan(this.im/this.re)*180)/Math.PI+bugFix);
+    }
+    
+    /**
+     * Returns the modulus.
+     * @return
+     */
+    public double getModulus()
+    {
+        return(Math.sqrt(Math.pow(this.re, 2)+Math.pow(this.im, 2)));
+    }
+    
+    /**
+     * Prints the complex number.
+     * Works only with rectangular coordinates.
+     * @return
+     */
+    public String formatComplexNumber()
+    {
+        String result = this.getRe() + "+(" + this.getIm() + ")i";
+        return result;
     }
     
     /*
