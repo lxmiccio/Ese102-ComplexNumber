@@ -2,39 +2,135 @@ package complexnumber;
 
 public class ComplexNumber
 {
-	private static double initializeRe;
-    private static double initializeIm;
-    private double re;
-    private double im;
-    
-    /**
-     * Static method, initialize the variables initializeRe and initializeIm to default value.
-     * Works only with rectangular coordinates.
-     * @param re
-     * @param im
-     */
-    public static void setInitializeRectangular(double re, double im)
+	private static double initRe;
+	private static double initIm;
+	private static StringFormat initFormat;
+	private double re;
+	private double im;
+	private StringFormat format;
+	
+	/**
+	 * Initializes the instance.
+	 */
+	public ComplexNumber()
+	{
+		this.re = ComplexNumber.initRe;
+		this.im = ComplexNumber.initIm;
+		this.format = ComplexNumber.initFormat;
+	}
+	
+	/**
+	 * The format of the string that will be printed.
+	 */
+	public static enum StringFormat
+	{
+		RECTANGULAR,
+		POLAR
+	}
+	
+	/**
+	 * Sets default value for any new instance, given rectangular coordinates.
+	 * Works only with rectangular coordinates.
+	 * @param re
+	 * @param im
+	 */
+	public static void setInitRectangular(double re, double im)
     {
-        initializeRe = re;
-        initializeIm = im;
-    }
+		initRe = re;
+        initIm = im;
+        initFormat = StringFormat.RECTANGULAR;
+	}
     
-    /**
-     * Static method, initialize the variables initializeRe and initializeIm to default value, given argument and modulus.
+	/**
+	 * Sets default value for any new instance, given polar coordinates.
 	 * Works only with polar coordinates.
-     * @param modulus
-     * @param argument
+	 * @param modulus
+	 * @param argument
+	 */
+	public static void setInitPolar(double modulus, double argument)
+	{
+		if(modulus < 0)
+			throw new IllegalArgumentException("Modulus must be greater or equal to 0");
+		initRe = Math.cos(argument*Math.PI/180)*modulus;
+		initIm = Math.sin(argument*Math.PI/180)*modulus;
+		initFormat = StringFormat.POLAR;
+	}
+
+	/**
+	 * Given two complex numbers, sums them. 
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public static ComplexNumber add(ComplexNumber addend1, ComplexNumber addend2)
+	{
+		ComplexNumber result = new ComplexNumber();
+	    result.setRectangular(addend1.getRe()+addend2.getRe(), addend1.getIm()+addend2.getIm());
+		return result;
+	}
+
+	/**
+	 * Given two complex numbers, subtracts them.
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public static ComplexNumber sub(ComplexNumber minuend, ComplexNumber subtrahend)
+	{
+		ComplexNumber result = new ComplexNumber();
+	    result.setRectangular(minuend.getRe()-subtrahend.getRe(), minuend.getIm()-subtrahend.getIm());
+		return result;
+	}
+
+	/**
+	 * Given two complex numbers, multiplies them.
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public static ComplexNumber multiply(ComplexNumber factor1, ComplexNumber factor2)
+	{
+		ComplexNumber result = new ComplexNumber();
+		result.setPolar(factor1.getModulus()*factor2.getModulus(), factor1.getArgument()+factor2.getArgument());
+		return result;
+	}
+
+	/**
+	 * Given two complex numbers, divides them.
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public static ComplexNumber divide(ComplexNumber dividend, ComplexNumber divisor)
+	{
+		ComplexNumber result = new ComplexNumber();
+		result.setPolar(dividend.getModulus()/divisor.getModulus(), dividend.getArgument()-divisor.getArgument());
+		return result;
+	}
+
+	/**
+	 * Given a complex number, returns the complex conjugate.
+	 * Works either with rectangular and with polar coordinates.
+	 * @return
+	 */
+	public static ComplexNumber getConjugate(ComplexNumber number)
+	{
+		ComplexNumber result = new ComplexNumber();
+		result.setRectangular(number.getRe(), -number.getIm());
+		return result;
+	}
+
+	/**
+     * Sets the format of the string that will be printed.
+     * @param format
      */
-    public static void setInitializePolar(double modulus, double argument)
+    public void setStringFormat(StringFormat format)
     {
-        if(modulus < 0)
-        	throw new IllegalArgumentException("Modulus must be greater or equal to 0");
-        initializeRe = Math.cos(argument*Math.PI/180)*modulus;
-        initializeIm = Math.sin(argument*Math.PI/180)*modulus;
-    }
+		this.format = format;
+	}
     
     /**
-     * SetRectangular initializes the variables re and im.
+     * Sets the complex number given rectangular coordinates.
      * Works only with rectangular coordinates.
      * @param re
      * @param im
@@ -46,90 +142,21 @@ public class ComplexNumber
     }
     
     /**
-     * SetPolar initializes the variables re and im, given argument and modulus.
+     * Sets the complex number given polar coordinates.
      * Works only with polar coordinates.
-     * The modulus can't be less than 0.
      * @param modulus
      * @param argument
      */
-    public void setPolar(double argument, double modulus)
+    public void setPolar(double modulus, double argument)
     {
         if(modulus < 0)
         	throw new IllegalArgumentException("The value of modulus must be equal or bigger than 0.");        	
         this.re = Math.cos(argument*Math.PI/180)*modulus;
 	    this.im = Math.sin(argument*Math.PI/180)*modulus;
-        if(argument%90 == 0 && argument%180 != 0)
-        	this.re = Math.floor(this.re);
-        else if(argument%180 == 0)
-        	this.im = Math.floor(this.im);
     }
     
     /**
-     * Given two complex numbers, sums them. 
-     * Works either with rectangular and with polar coordinates.
-     * @param operand
-     * @return
-     */
-    public static ComplexNumber add(ComplexNumber operand1, ComplexNumber operand2)
-    {
-    	ComplexNumber result = new ComplexNumber();
-        result.setRectangular(operand1.re+operand2.re, operand1.im+operand2.im);
-    	return result;
-    }
-    
-    /**
-     * Given two complex numbers, subtracts them.
-     * Works either with rectangular and with polar coordinates.
-     * @param operand
-     * @return
-     */
-    public static ComplexNumber sub(ComplexNumber operand1, ComplexNumber operand2)
-    {
-    	ComplexNumber result = new ComplexNumber();
-    	result.setRectangular(operand1.re-operand2.re, operand1.im-operand2.im);
-    	return result;
-    }
-    
-    /**
-     * Given two complex numbers, multiplies them.
-     * Works either with rectangular and with polar coordinates.
-     * @param operand
-     * @return
-     */
-    public static ComplexNumber multiply(ComplexNumber operand1, ComplexNumber operand2)
-    {
-    	ComplexNumber result = new ComplexNumber();
-    	result.setPolar(operand1.getArgument()+operand2.getArgument(), operand1.getModulus()*operand2.getModulus());
-    	return result;
-    }
-    
-    /**
-     * Given two complex numbers, divides them.
-     * Works either with rectangular and with polar coordinates.
-     * @param operand
-     * @return
-     */
-    public static ComplexNumber divide(ComplexNumber operand1, ComplexNumber operand2)
-    {
-    	ComplexNumber result = new ComplexNumber();
-    	result.setPolar(operand1.getArgument()-operand2.getArgument(), operand1.getModulus()/operand2.getModulus());
-    	return result;
-    }
-        
-    /**
-     * Given a complex number, returns the complex conjugate.
-     * Works either with rectangular and with polar coordinates.
-     * @return
-     */
-    public static ComplexNumber getConjugate(ComplexNumber operand)
-    {
-    	ComplexNumber result = new ComplexNumber();
-    	result.setRectangular(operand.re, -operand.im);
-    	return result;
-    }
-      
-    /**
-     * Returns re.
+     * Returns the value of re.
      * @return
      */
     public double getRe()
@@ -138,7 +165,7 @@ public class ComplexNumber
     }
 
     /**
-     * Returns im.
+     * Returns the value of im.
      * @return
      */
     public double getIm()
@@ -147,7 +174,7 @@ public class ComplexNumber
     }
     
     /**
-     * Returns the argument.
+     * Returns the value of argument.
      * @return
      */
     public double getArgument()
@@ -159,7 +186,7 @@ public class ComplexNumber
     }
     
     /**
-     * Returns the modulus.
+     * Returns the value of modulus.
      * @return
      */
     public double getModulus()
@@ -168,51 +195,109 @@ public class ComplexNumber
     }
     
     /**
-     * Prints the complex number.
-     * Works only with rectangular coordinates.
+	 * Given a complex number, sums them. 
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public ComplexNumber add(ComplexNumber addend)
+	{
+		ComplexNumber result = new ComplexNumber();
+	    result.setRectangular(this.getRe()+addend.getRe(), this.getIm()+addend.getIm());
+		return result;
+	}
+
+	/**
+	 * Given a complex number, subtracts them.
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public ComplexNumber sub(ComplexNumber subtrahend)
+	{
+		ComplexNumber result = new ComplexNumber();
+	    result.setRectangular(this.getRe()-subtrahend.getRe(), this.getIm()-subtrahend.getIm());
+		return result;
+	}
+
+	/**
+	 * Given a complex number, multiplies them.
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public ComplexNumber multiply(ComplexNumber factor)
+	{
+		ComplexNumber result = new ComplexNumber();
+		result.setPolar(this.getModulus()*factor.getModulus(), this.getArgument()+factor.getArgument());
+		return result;
+	}
+
+	/**
+	 * Given a complex number, divides them.
+	 * Works either with rectangular and with polar coordinates.
+	 * @param operand
+	 * @return
+	 */
+	public ComplexNumber divide(ComplexNumber divisor)
+	{
+		ComplexNumber result = new ComplexNumber();
+		result.setPolar(this.getModulus()/divisor.getModulus(), this.getArgument()-divisor.getArgument());
+		return result;
+	}
+
+	/**
+	 * Given a complex number, returns the complex conjugate.
+	 * Works either with rectangular and with polar coordinates.
+	 * @return
+	 */
+	public ComplexNumber getConjugate()
+	{
+		ComplexNumber result = new ComplexNumber();
+		result.setRectangular(this.getRe(), -this.getIm());
+		return result;
+	}
+    
+	/**
+	 * Override of toString method.
+	 */
+    @Override public String toString()
+    {
+		return toString(this.format);
+	}
+   
+    /**
+     * Returns a string according to format.
+     * @param format
      * @return
      */
-    public String formatComplexNumber()
+    public String toString(StringFormat format)
     {
-        String result = this.getRe() + "+(" + this.getIm() + ")i";
-        return result;
-    }
+		String risult = new String();
+		switch(format)
+		{
+			case RECTANGULAR:
+				risult = this.getRe() + "+(" + this.getIm() + ")i";
+				break;
+			case POLAR:
+				risult = this.getModulus() + "*exp(i*" + this.getArgument() +")";
+				break;
+		}
+		return risult;
+	}
     
-    /*
-	 *   1) Math.sqrt(Math.pow(this.re, 2)+Math.pow(this.im, 2))
-	 *      Math.atan(this.im/this.re)*180)/Math.PI
-	 *      Per re = 0 e im = 0 l'argomento deve essere NaN
-	 *      this.re = Math.cos(argument*Math.PI/180)*modulus
-	 *      this.im = Math.sin(argument*Math.PI/180)*modulus
-	 *      
-	 *   2) Non posso fornire quattro funzioni setter (setRe, setIm, setModulus, setArgument), ma lavorare 
-	 *      con due (setRectangular, setPolar), poiché i parametri devo essere utilizzati in coppia.
-	 *   
-	 *	 3) Non sono quindi presenti costruttori poiché questa classe gestisce i numeri complessi in due modi, utilizzando
-	 *      coordinate cartesiane e polari. Non è possibile fornire entrambi i metodi costruttori, poiché entrambi
-	 *      richiedono come parametri due valori double. È stato quindi deciso di non utilizzare nessun metodo costruttore, 
-	 *      perciò l'utente, per inizializzare i campi della classe, utilizzerà i metodi setRectangular e setPolar.
-	 *	
-	 *	 4) Devo necessariamente utilizzare quattro funzioni getter (getRe, getIm, getModulus, getArgument),
-	 * 	    poiché, utilizzandone solamente due (getRectangular, getPolar), ciascun metodo dovrebbe ritornare due valori,
-	 *	    cosa impossibile.
-	 *
-	 *	 5) Conosco come calcolare la somma/sottrazione tra due numeri complessi?
-     *      x = a1+b1i 
-     *      y = a2+b2i
-     *      x+y = (a1+a2)+(b1+b2)i
-     *      x-y = (a1-a2)+(b1-b2)i
-     *      
-     *   6) Conosco come calcolare la moltiplicazione/divisione tra due numeri complessi?
-     *	    x = a1+b1i 
-     *      y = a2+b2i
-     *      Argomento = ArgomentoX+ArgomentoY
-     *      Modulo = ModuloX*ModuloY
-	 *	    Argomento = ArgomentoX-ArgomentoY
-     *      Modulo = ModuloX/ModuloY
-     *	
-     *	 7) Conosco come calcolare il complesso coniugato di un numero complesso?
-     *      x = a+bi 
-     *      x = a-bi
+    /**
+     * Override of equals method.
      */
+	@Override public boolean equals(Object object)
+	{
+		boolean equal = false;
+		if(object instanceof ComplexNumber)
+		{
+			ComplexNumber pointer = (ComplexNumber)object;
+			if(this.re == pointer.getRe() && this.im == pointer.getIm())
+				equal = true;
+		}
+		return equal;
+	}
 }
