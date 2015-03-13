@@ -1,5 +1,7 @@
 package complexnumber;
 
+import static java.lang.Double.NaN;
+
 public class ComplexNumber
 {
 	private static double initRe;
@@ -116,7 +118,8 @@ public class ComplexNumber
 	public static ComplexNumber getConjugate(ComplexNumber number)
 	{
 		ComplexNumber result = new ComplexNumber();
-		result.setRectangular(number.getRe(), -number.getIm());
+		if(number.getIm() != 0)
+			result.setRectangular(number.getRe(), -number.getIm());
 		return result;
 	}
 
@@ -179,10 +182,20 @@ public class ComplexNumber
      */
     public double getArgument()
     {
-    	short bugFix = 0;
-    	if(this.re < 0)
-    		bugFix = 180;
-    	return((Math.atan(this.im/this.re)*180)/Math.PI+bugFix);
+    	double argument = 0;
+    	if(this.re == 0 && this.im == 0)
+    		argument = 0;
+    	else
+    	{
+    		argument = (Math.atan(this.im/this.re)*180)/Math.PI;
+    		if(this.re < 0)
+    			argument += 180;   		
+    		while(argument > 360)
+    			argument -= 360;
+    		while(argument < 0)
+    			argument += 360;
+    	}	
+		return argument;
     }
     
     /**
@@ -191,7 +204,7 @@ public class ComplexNumber
      */
     public double getModulus()
     {
-        return(Math.sqrt(Math.pow(this.re, 2)+Math.pow(this.im, 2)));
+        return(Math.sqrt(Math.pow(this.getRe(), 2)+Math.pow(this.getIm(), 2)));
     }
     
     /**
@@ -254,7 +267,8 @@ public class ComplexNumber
 	public ComplexNumber getConjugate()
 	{
 		ComplexNumber result = new ComplexNumber();
-		result.setRectangular(this.getRe(), -this.getIm());
+		if(this.getIm() != 0)
+			result.setRectangular(this.getRe(), -this.getIm());
 		return result;
 	}
     
@@ -274,28 +288,25 @@ public class ComplexNumber
     public String toString(StringFormat format)
     {
 		String risult = new String();
-		switch(format)
-		{
-			case RECTANGULAR:
-				risult = this.getRe() + "+(" + this.getIm() + ")i";
-				break;
-			case POLAR:
-				risult = this.getModulus() + "*exp(i*" + this.getArgument() +")";
-				break;
-		}
+		if(format == StringFormat.RECTANGULAR)
+			risult = this.getRe() + "+(" + this.getIm() + ")i";
+		else if(format == StringFormat.POLAR)
+			risult = this.getModulus() + "*exp(i*" + this.getArgument() +")";
+		else
+			throw new UnsupportedOperationException();
 		return risult;
 	}
     
     /**
      * Override of equals method.
      */
-	@Override public boolean equals(Object object)
+	@Override public boolean equals(Object obj)
 	{
 		boolean equal = false;
-		if(object instanceof ComplexNumber)
+		if(obj instanceof ComplexNumber)
 		{
-			ComplexNumber pointer = (ComplexNumber)object;
-			if(this.re == pointer.getRe() && this.im == pointer.getIm())
+			ComplexNumber pointer = (ComplexNumber)obj;
+			if(this.getRe() == pointer.getRe() && this.getIm() == pointer.getIm())
 				equal = true;
 		}
 		return equal;
