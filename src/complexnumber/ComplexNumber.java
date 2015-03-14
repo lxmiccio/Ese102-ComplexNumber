@@ -298,7 +298,7 @@ public class ComplexNumber
 	}
     
     /**
-     * Override of equals method.
+     * Override of equals method. Returns true if two instance are equal, otherwise returns false.
      */
 	@Override public boolean equals(Object obj)
 	{
@@ -310,5 +310,17 @@ public class ComplexNumber
 				equal = true;
 		}
 		return equal;
+	}
+	
+	@Override public int hashCode()
+    {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(im);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(re);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 }
